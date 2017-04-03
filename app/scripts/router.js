@@ -3,10 +3,10 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 
 
-var cartContainer = require('.components/cart.jsx');
+var cartContainer = require('./components/cart.jsx');
 
 var AppRouter = Backbone.Router.extend({
-  routes: {
+  routes: {n
     '': 'index',
     'cart': 'cart'
   },
