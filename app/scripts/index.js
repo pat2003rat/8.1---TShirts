@@ -5,5 +5,5 @@ require('./router');
 
 
 $(function(){
-  Backbone.history.start(); //on # change. do something t
+  Backbone.history.start();
 });

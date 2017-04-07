@@ -1,186 +1,105 @@
 var React = require('react');
+var Backbone = require('backbone');
 
+var Order = require('../models/shirts').Order;
+var OrderCollection = require('../models/shirts').OrderCollection;
 
-<div class="modal fade">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+var CartLayout = React.createClass({
+  getInitialState: function(){
+    // set cart to an empty array and map over it
+    var cart = [];
+    var total = 0;
+    // grab existing cart from localStorage and update its value
+    if(localStorage.getItem('cart')){
+      // The JSON.parse() method parses a JSON string, constructing the JavaScript value or object described by the string.
+      cart = JSON.parse(localStorage.getItem('cart'));
+      // put total method here
+      total = cart.reduce(function(accum, i){
+        return accum + i.price;
+      }, 0);
+    }
+    // return cart and total
+    return {
+      cart: cart,
+      total: total
+    };
+  },
+  //clearing localStorage of puchaseItems
+  puchaseItems: function(e){
+    e.preventDefault();
+    localStorage.clear();
+    this.forceUpdate();
+  },
+
+  render: function(){
+      var cartItems = this.state.cart.map(function(item, index){
+        // get data out of an object through dot notation or item.key
+        console.log('item', item);
+        return (
+          <div key={ index } className ="col-md-12">
+            <div>
+              <div className="col-md-3"><h3>{ item.name }</h3></div>
+              <div className="col-md-3"><h3>{ item.description }</h3></div>
+              <div className="col-md-3"><h3>$ { item.price }</h3></div>
+              <div className="col-md-3"><h3>{ item.size }</h3></div>
+            </div>
+          </div>
+        )
+      })
+    return(
+      <div className="container-fluid">
+        <nav className="navbar navbar-default">
+            <div className="container-fluid">
+                <div className="navbar-header">
+                    <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span className="sr-only">Toggle navigation</span>
+                        <span className="icon-bar"></span>
+                        <span className="icon-bar"></span>
+                        <span className="icon-bar"></span>
+                    </button>
+                    <a className="navbar-brand" href="#">T-Shirt Heaven</a>
+                </div>
+                <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul className="nav navbar-nav">
+                        <li className="active">
+                            <a href="#">T-Shirts
+                                <span className="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#cart/">Cart</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div className="row">
+          <div className="well col-xs-12 col-md-12 cartheadercolor">
+            <div className="col-md-3"><h3>Product</h3></div>
+            <div className="col-md-3"><h3>Description</h3></div>
+            <div className="col-md-3"><h3>Price</h3></div>
+            <div className="col-md-3"><h3>Size</h3></div>
+          </div>
+          <div className="well col-xs-12 col-md-12">
+            { cartItems }
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-4"></div>
+
+          <div className="well col-xs-12 col-md-4 checkoutwellcolor">
+            <h3>Total</h3>
+            <ul>
+              <h1><li>$ {this.state.total}</li></h1>
+            </ul>
+            <button onClick={this.puchaseItems}type="button" className="btn btn-info btn-lg">Purchase Items</button>
+          </div>
+        </div>
       </div>
-      <div class="modal-body">
-        <p>Modal body text goes here.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Save changes</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
+    )
+  }
+});
 
-class CartContainer extends React.Component {
- render(){
-   return (
-
-     <div class="container">
-       <div class="row">
-         <nav class="navbar navbar-toggleable-md navbar-light bg-faded">        </button>
-           <a class="navbar-brand" href="#">The Following Rebel</a>
-           <a class="navbar-brand" href="#">T-shirts</a>
-           <a class="navbar-brand" href="#">Cart</a>
-
-       </div>
-       <div class="row">
-         <div>
-           <div class="jumbotron">
-             <h3 class="display-3">The Following Rebel!</h1>
-           <p class="lead">This deal will knot be here tomorrow.</p>
-           <hr class="my-4">
-           </p>
-         </div>
-       </div>
-       <ul>
-         <li class="col-xs-12 col-sm-4"><img src="./images/ewok.jpg" alt="#">
-         Endor Brewing Co Est 1984
-         Walk in... Ewok out
-
-         <div>
-           <label for="quantity">Qty: </label>
-           <input min="1" type="number" id="quantity" name="quantity" value="1" />
-
-           <div class="form-group">
-         </div>
-
-         <div class="form-group">
-       <label for="sel1">Select list:</label>
-       <select class="form-control" id="sel1">
-         <option></option>
-         <option>XS</option>
-         <option>S</option>
-         <option>M</option>
-         <option>L</option>
-         <option>XL</option>
-       </select>
-     </div>
-
-     <a href="#" class="btn btn-info btn-lg">
-       <span class="glyphicon glyphicon-shopping-cart"></span>
-       Add to Cart
-     </a>
-
-         </li>
-         <li class="col-xs-12 col-sm-4"><img src="./images/hanssolo.jpg" alt="#">
-         Hans going Solo .......
-         Leverhosen never felt so right
-
-         <div>
-           <label for="quantity">Qty: </label>
-           <input min="1" type="number" id="quantity" name="quantity" value="1" />
-
-           <div class="form-group">
-         </div>
-         <div class="form-group">
-       <label for="sel1">Select list:</label>
-       <select class="form-control" id="sel1">
-         <option></option>
-         <option>XS</option>
-         <option>S</option>
-         <option>M</option>
-         <option>L</option>
-         <option>XL</option>
-       </select>
-       </div>
-
-           <a href="#" class="btn btn-info btn-lg">
-             <span class="glyphicon glyphicon-shopping-cart"></span>
-             Add to Cart
-           </a>
-
-
-         </li>
-         <li class="col-xs-12 col-sm-4"><img src="./images/r2d2.png" alt="#">
-         It's a Pirates Life for R2D2 ....
-         C3PO didnt make it in time
-       <div>
-         <label for="quantity">Qty: </label>
-         <input min="1" type="number" id="quantity" name="quantity" value="1" />
-
-         <div class="form-group">
-       </div>
-       <label for="sell">Select list:</label>
-       <select class="form-control" id="sel1">
-         <option></option>
-         <option>XS</option>
-         <option>S</option>
-         <option>M</option>
-         <option>L</option>
-         <option>XL</option>
-       </select>
-     </div>
-
-
-
-     <a href="#" class="btn btn-info btn-lg">
-       <span class="glyphicon glyphicon-shopping-cart"></span>
-       Add to Cart
-     </a>
-         </li>
-       </ul>
-     </div>
-   </div>
-
-
-  )
+module.exports = {
+  CartLayout
 };
-
-
-
-    // constructor(props) {
-    //     super(props);
-    //
-    //     var CartCollection = new CartCollection();
-    //     CartCollection.add([]);
-    //
-    //     var orderData = JSON.parse(localStorage.getItem('order');
-    //     var order = new Order(orderData);
-    //
-    //     this.state = {
-    //         cartCollection,
-    //         order
-    //     };}
-    // addItemToOrder(cartItem) {
-    //     var order = this.state.order;
-    //
-    //     var orderItem = cartItem.toJSON();
-    //     order.get('items').add(orderItem);
-    //
-    //     localStorage.setItem('order', JSON.stringify(order.toJSON()));
-    //
-    //     this.setState({order});
-    // }
-    // placeOrder() {
-    //     this.state.order.save();
-    // }
-    // render() {
-    //     var cartList = this.state.cartCollection.map(cartItem => {
-    //         return (
-    //             <li key={cartItem.cid}>
-    //                 <a onClick={(e) => {
-    //                     e.preventDefault();
-    //                     this.addItemToOrder(cartItem)
-    //                 }} href="#">{menuItem.get('name')}</a>
-    //                 }
-    //             </li>
-    //           );
-    //         });
-    //
-    //         var orderList = this.state.order.get('items').map((items) => {
-    //           return (
-    //             <li>{item.get('name')}</li>
-    //           )
-    //         });
-    //
-    //         return
